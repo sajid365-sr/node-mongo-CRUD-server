@@ -1,19 +1,45 @@
 const express = require('express'); // ShortCut use "req"
 const cors = require('cors'); // ShortCut use "req"
 const app = express();
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 // middleware
 app.use(cors());
-app.use(express.json()); // to get post data
+app.use(express.json()); // to get post data as an object format otherwise data will be undefined.
+
+
+// user: dbuser2
+// pass: dkdeN6NypheiSkcH
+
+
+
+
+const uri = "mongodb+srv://dbuser2:dkdeN6NypheiSkcH@cluster0.90qadcl.mongodb.net/?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
 //  using async/await function
 async function run(){
 
+  try{
+    const userCollection = client.db('nodeMongoCrud').collection('users');
+    const user = {name:'dancing test', email:'dancing@gmail.com'};
+
+    const result = await userCollection.insertOne(user);
+    console.log(result)
+  }
+  finally{
+
+  }
 
 
 }
+
+
+
+
+
 
 run().catch(e => console.error(e));
 
