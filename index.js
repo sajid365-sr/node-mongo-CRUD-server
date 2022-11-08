@@ -13,7 +13,7 @@ app.use(express.json()); // to get post data as an object format otherwise data 
 // pass: dkdeN6NypheiSkcH
 
 
-const uri = "mongodb+srv://dbuser2:dkdeN6NypheiSkcH@cluster0.90qadcl.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://dbuser2:dkdeN6NypheiSkcH@cluster0.90qadcl.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
