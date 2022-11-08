@@ -1,7 +1,7 @@
 const express = require('express'); // ShortCut use "req"
 const cors = require('cors'); // ShortCut use "req"
 const app = express();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -23,6 +23,45 @@ async function run(){
   try{
     const userCollection = client.db('nodeMongoCrud').collection('users');
     
+    // READ
+    app.get('/users', async(req, res) =>{
+
+      const query = {};
+      const cursor = userCollection.find(query);
+      const users = await cursor.toArray();
+      res.send(users);
+    })
+
+    // UPDATE
+    app.get('/users/:id', async(req,res) =>{
+      const id = req.params.id;
+      const query = { _id: ObjectId(id)};
+      const user = await userCollection.findOne(query);
+
+      res.send(user);
+
+    })
+
+    //PUT
+    app.put('/users/:id', async(req, res) =>{
+      const id = req.params.id;
+      const filter = {_id:ObjectId(id)};
+      const user = req.body;
+      const options = {upsert: true}
+      const updatedUser = {
+        $set:{
+          name: user.name,
+          address: user.address,
+          email: user.email
+        }
+      }
+     const result = await userCollection.updateOne(filter, updatedUser, options);
+     res.send(result);
+
+    })
+
+
+    // CREATE
     app.post('/users', async(req, res) =>{
       const user =  req.body;
       
@@ -30,6 +69,16 @@ async function run(){
       res.send(result);
       console.log(result)
  
+    })
+
+    // DELETE
+    app.delete('/users/:id', async(req, res) =>{
+      const id = req.params.id;
+      const query = { _id:ObjectId(id) }
+      console.log('Trying to delete: ', id);
+
+      const result = await userCollection.deleteOne(query);
+      res.send(result);
     })
 
   }
