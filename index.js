@@ -13,8 +13,6 @@ app.use(express.json()); // to get post data as an object format otherwise data 
 // pass: dkdeN6NypheiSkcH
 
 
-
-
 const uri = "mongodb+srv://dbuser2:dkdeN6NypheiSkcH@cluster0.90qadcl.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -24,10 +22,16 @@ async function run(){
 
   try{
     const userCollection = client.db('nodeMongoCrud').collection('users');
-    const user = {name:'dancing test', email:'dancing@gmail.com'};
+    
+    app.post('/users', async(req, res) =>{
+      const user =  req.body;
+      
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+      console.log(result)
+ 
+    })
 
-    const result = await userCollection.insertOne(user);
-    console.log(result)
   }
   finally{
 
@@ -35,10 +39,6 @@ async function run(){
 
 
 }
-
-
-
-
 
 
 run().catch(e => console.error(e));
